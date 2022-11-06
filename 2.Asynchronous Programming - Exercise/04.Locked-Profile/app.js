@@ -73,6 +73,7 @@ function lockedProfile() {
         else if(unlocked.checked){
             button.textContent = "Hide it";
             currentParent.children[9].style.display = "block";
+            button.disabled = true;
         }
         
     }

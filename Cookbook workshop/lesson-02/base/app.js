@@ -54,9 +54,7 @@ async function loadRecepies() {
 
 async function loadIngridients(e){
 
-    if(isClicked){
-        return;
-    }
+
 
     let requestor = e.currentTarget;
     let target = requestor.getElementsByTagName('h2')[0];
@@ -67,7 +65,7 @@ async function loadIngridients(e){
         }
         let results = await pullIngiridientsRequest.json();
 
-        let isClicked = true;
+
         visualizeIngridients(requestor,results);
 
 

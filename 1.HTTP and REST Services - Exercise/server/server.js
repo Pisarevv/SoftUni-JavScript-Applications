@@ -29,6 +29,7 @@
         constructor(message = 'Request error') {
             super(message);
             this.name = 'RequestError'; 
+            
             this.status = 400;
         }
     }
