@@ -11,6 +11,8 @@ let addButton = document.querySelector("button.add");
 let catchesDiv = document.querySelector("div#catches");
 catchesDiv.replaceChildren();
 
+let mainCathcesDiv = document.querySelector("section#home-view #catches").addEventListener('click', manipulateCatch)
+
 let loadCatchButton = document.querySelector("button.load");
 loadCatchButton.addEventListener('click', loadCatch)
 
@@ -38,6 +40,7 @@ async function loadCatch(e){
         for(let catche of Object.values(data)){
             let newCatche = createCatch(catche.angler,catche.weight,catche.species,catche.location,catche.bait,catche.captureTime,catche._id);
             newCatche.id = catche._ownerId;
+            newCatche.setAttribute("catch-id",catche._id);
             fragment.appendChild(newCatche);
         }
 
@@ -111,7 +114,81 @@ async function addCatch(e){
 }
 
 
+function manipulateCatch(e){
+    let target = e.target;
 
+    if(target.classList == "update"){
+        updateCatch(target);
+    }
+    else if(target.classList == "delete"){
+        deleteCatch(target);
+
+    }
+
+}
+
+
+async function updateCatch(target){
+    let catchDiv = target.parentElement;
+    let catch_id = catchDiv.getAttribute("catch-id");
+
+    let angler = catchDiv.querySelector(".angler").value;
+    let weight = catchDiv.querySelector(".weight").value;
+    let species = catchDiv.querySelector(".species").value;
+    let location = catchDiv.querySelector(".location").value;
+    let bait = catchDiv.querySelector(".bait").value;
+    let captureTime = catchDiv.querySelector(".captureTime").value;
+
+    let dataToSend = {
+        angler,
+        weight,
+        species,
+        location,
+        bait,
+        captureTime
+    }
+    let token = sessionStorage.getItem("accessToken")
+    try{
+        let response = await fetch(`http://localhost:3030/data/catches/${catch_id}`,{
+            method:"put",
+            headers: {
+                "Content-type" : "application/json",
+                "X-authorization" : token
+            },
+            body: JSON.stringify(dataToSend)
+        }
+        )
+
+        if(response.ok != true){
+            let error = await response.json();
+            throw new Error(error.message);
+        }
+        loadCatch();
+
+    }
+    catch(error){
+        alert(error.message)
+    }
+
+}
+
+async function deleteCatch(target){
+    let catchDiv = target.parentElement;
+    let catch_id = catchDiv.getAttribute("catch-id");
+    let token = sessionStorage.getItem("accessToken");
+    let response = await fetch(`http://localhost:3030/data/catches/${catch_id}`, {
+        method:"Delete",
+        headers:{
+            "X-authorization" : token
+        }
+    })
+    if(response.ok != true){
+        let error = await response.json();
+        throw new Error(error.message);
+    }
+    loadCatch();
+
+}
 
 
 
@@ -238,6 +315,7 @@ function isLoged(){
         
     }
     else{
+        addButton.disabled = true; 
         homeButton.style.display = "inline";
         logoutButton.style.display = "none";
         loginButton.style.display = "inline";
