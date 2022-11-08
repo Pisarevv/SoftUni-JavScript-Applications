@@ -1,19 +1,27 @@
+window.addEventListener('load',createEditForm)
+
 function solve(){
 
     let url = "http://localhost:3030/jsonstore/collections/books";
 
     let siteBody = document.querySelector("body");
-    createEditForm();
 
     let tableBody = document.querySelector("table tbody");
+
+    //forms
     let createBookForm = document.querySelector("form");
     createBookForm.id = "createBookForm";
+    createBookForm.addEventListener('submit', createBook);
+
+    let editBookForm = document.querySelector("#editBookForm");
+
+
+
     let loadBooksButton = document.querySelector("button");
     loadBooksButton.id = "load";
     loadBooksButton.addEventListener('click', loadBooks);
 
-    let submitButton = document.querySelector("form#createBookForm button");
-    submitButton.addEventListener('click',createBook);
+    
 
     
 
@@ -99,32 +107,6 @@ function solve(){
     
     }
 
-    async function editBook(e){
-        try{
-            e.preventDefault();
-            let editBookForm = document.querySelector("#editBookForm");
-
-            createBookForm.style.display = "none";
-            editBookForm.style.display = "block";
-
-            let currentRow = e.target.parentElement.parentElement;
-
-            let bookId = e.target.parentElement.parentElement.id;
-            let title = currentRow.children[0].textContent;
-            let author = currentRow.children[1].textContent;
-
-            let inputs =  document.querySelectorAll("form#editBookForm input");
-            inputs[0].value = author;
-            inputs[1].value = title;
-
-            let saveButton = editBookForm.querySelector("button");
-            saveButton.addEventListener('click', saveEdit);
-            
-        }
-        catch(error){
-            alert(error.message)
-        }
-
     }
 
 
@@ -203,43 +185,74 @@ function solve(){
         return element;
     }
 
-    function createEditForm(){
-        let editForm = document.createElement("form");
-        editForm.id = "editBookForm";
+   
 
-        let h3 = document.createElement("h3");
-        h3.textContent = "Edit FORM";
-        editForm.appendChild(h3);
 
-        let titleLabel = document.createElement("label");
-        titleLabel.textContent = "TITLE";
-        editForm.appendChild(titleLabel);
-        
-        let titleInput = document.createElement("input");
-        titleInput.type = "text";
-        titleInput.name = "title";
-        editForm.appendChild(titleInput);
+function createEditForm(){
+    let editForm = document.createElement("form");
+    editForm.id = "editBookForm";
 
-        let authorLabel  = document.createElement("label");
-        authorLabel.textContent = "AUTHOR";
-        editForm.appendChild(authorLabel);
+    let h3 = document.createElement("h3");
+    h3.textContent = "Edit FORM";
+    editForm.appendChild(h3);
 
-        let authorInput = document.createElement("input");
-        authorInput.type = "text";
-        authorInput.name = "author";
-        editForm.appendChild(authorInput);
+    let titleLabel = document.createElement("label");
+    titleLabel.textContent = "TITLE";
+    editForm.appendChild(titleLabel);
+    
+    let titleInput = document.createElement("input");
+    titleInput.type = "text";
+    titleInput.name = "title";
+    editForm.appendChild(titleInput);
 
-        let editButton = document.createElement("button");
-        editButton.textContent = "Save";
-        editButton.addEventListener('click',editBook);
+    let authorLabel  = document.createElement("label");
+    authorLabel.textContent = "AUTHOR";
+    editForm.appendChild(authorLabel);
 
-        editForm.appendChild(editButton);
+    let authorInput = document.createElement("input");
+    authorInput.type = "text";
+    authorInput.name = "author";
+    editForm.appendChild(authorInput);
 
-        editForm.style.display = "none";
-        siteBody.appendChild(editForm);
+    let editButton = document.createElement("button");
+    editButton.textContent = "Save";
+    editButton.addEventListener('click',editBook);
 
+    editForm.appendChild(editButton);
+
+    editForm.style.display = "none";
+    editForm.addEventListener('submit',editBook);
+    document.querySelector("body").appendChild(editForm);
+
+
+    async function editBook(e){
+        try{
+            e.preventDefault();
+            let editBookForm = document.querySelector("#editBookForm");
+
+            createBookForm.style.display = "none";
+            editBookForm.style.display = "block";
+
+            let currentRow = e.target.parentElement.parentElement;
+
+            let bookId = e.target.parentElement.parentElement.id;
+            let title = currentRow.children[0].textContent;
+            let author = currentRow.children[1].textContent;
+
+            let inputs =  document.querySelectorAll("form#editBookForm input");
+            inputs[0].value = author;
+            inputs[1].value = title;
+
+            let saveButton = editBookForm.querySelector("button");
+            saveButton.addEventListener('click', saveEdit);
+            
+        }
+        catch(error){
+            alert(error.message)
+        }
     }
-}
 
+
+}
 
 solve();
