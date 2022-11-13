@@ -4,6 +4,7 @@ const endpoints =  {
     "ideas" : "/data/ideas?select=_id%2Ctitle%2Cimg&sortBy=_createdOn%20desc",
     'create': "/data/ideas",
     "ideaById" : '/data/ideas/',
+    "logout" : "/users/logout"
 
 
 };
@@ -27,3 +28,5 @@ export async function getById(id){
 export async function deleteById(id){
     return api.delete(endpoints.ideaById + id);
 }
+
+

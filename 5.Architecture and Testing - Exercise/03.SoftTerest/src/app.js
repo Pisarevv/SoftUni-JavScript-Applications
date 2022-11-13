@@ -1,3 +1,4 @@
+import { logout } from "./api/users.js";
 import { initalize } from "./api/router.js";
 import { showCatalog } from "./views/catalog.js";
 import { showCreate } from "./views/create.js";
@@ -15,7 +16,8 @@ const links ={
     '/login' : showLogin,
     '/register' : showRegister,
     '/details' : showDetails,
-    '/create' : showCreate
+    '/create' : showCreate,
+    '/logout' : onLogout
 }
 
 const router = initalize(links);
@@ -23,3 +25,10 @@ router.updateNav();
 
 //startApp
 router.goTo("/");
+
+
+function onLogout(){
+   logout();
+   router.updateNav();
+   router.goTo('/');
+}

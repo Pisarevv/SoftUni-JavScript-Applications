@@ -1,9 +1,11 @@
 import { deleteById, getById } from "../api/data.js";
 
 let section = document.querySelector("#detailsPage");
+let ctx = null;
 
 export async function showDetails(context,id){
     const idea = await getById(id);
+    ctx = context;
 
     context.showSection(section);
     let user = JSON.parse(localStorage.getItem("user"));
@@ -15,12 +17,13 @@ export async function showDetails(context,id){
         section.querySelector("#deleteBtn").addEventListener('click', async (event) =>{
             event.preventDefault();
             deleteById(id);
+            ctx.goTo('/catalog');
         })
     }
 
 }
 
-function createIdeaHTML(idea){
+function createIdeaHTML(idea,isOwner){
     let html = `<img class="det-img" src="${idea.img}" />
     <div class="desc">
         <h2 class="display-5">${idea.title}</h2>
