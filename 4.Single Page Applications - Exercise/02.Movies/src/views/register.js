@@ -14,6 +14,6 @@ export function showRegister(context){
 function onSubmit(e){
     e.preventDefault();
     register();
-    ctx.updateNav();
     ctx.goTo('/home');
+    ctx.updateNav();
 }

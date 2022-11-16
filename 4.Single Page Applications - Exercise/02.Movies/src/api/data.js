@@ -21,6 +21,6 @@ export async function register(){
     };
 
     let result = await api.post('/users/register',dataToSend);
-    localStorage.setItem('user', JSON.stringify(result));
+    localStorage.setItem("user", JSON.stringify(result));
 }
     

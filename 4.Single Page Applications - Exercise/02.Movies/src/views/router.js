@@ -37,9 +37,9 @@ export function initialize(links) {
     }
 
     function updateNav() {
-        let user = localStorage.getItem('user');
+        let user = JSON.parse(localStorage.getItem("user"));
         if (user) {
-            document.querySelector('#welcome-msg').textContent = `Welcome ${user}`
+            document.querySelector('#welcome-msg').textContent = `Welcome ${user.email}`
             document.querySelectorAll('.user').forEach(x => x.style.display = 'block');
             document.querySelectorAll('.guest').forEach(x => x.style.display = 'none');
         }
