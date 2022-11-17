@@ -5,6 +5,7 @@ export function initialize(links) {
 
     nav.addEventListener('click', onNavigate);
 
+
     let context = {
         showSection,
         goTo,
@@ -14,7 +15,7 @@ export function initialize(links) {
     return context;
     
 
-    function showSection(section) {
+    function showSection(section,...params) {
         main.replaceChildren(section);
     }
 
@@ -36,7 +37,7 @@ export function initialize(links) {
         }
     }
 
-    function updateNav() {
+    function updateNav(section) {
         let user = JSON.parse(localStorage.getItem("user"));
         if (user) {
             document.querySelector('#welcome-msg').textContent = `Welcome ${user.email}`

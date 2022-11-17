@@ -33,6 +33,10 @@ async function request(method,url,body){
             throw new Error("Please log in!");
         }
 
+        if(result.status == 403){
+            localStorage.removeItem("user");
+        }
+
         return result.json();
         
 
