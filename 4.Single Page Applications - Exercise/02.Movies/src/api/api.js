@@ -23,20 +23,22 @@ async function request(method,url,body){
         let result = await fetch(target + url,options);
     
         if(result.ok != true){
+            if(result.status == 401){
+                throw new Error("Please log in!");
+            }
+    
+            if(result.status == 403){
+                localStorage.removeItem("user");
+                return;
+            }
+
             throw new Error(result.json());
         }
         if(result.status == 204){
             return result;
         }
 
-        if(result.status == 401){
-            throw new Error("Please log in!");
-        }
-
-        if(result.status == 403){
-            localStorage.removeItem("user");
-        }
-
+        
         return result.json();
         
 

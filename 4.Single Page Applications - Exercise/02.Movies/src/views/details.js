@@ -6,45 +6,80 @@ section.remove();
 section.className = "view-section";
 section.id = "movieDetails";
 
-let user = JSON.parse(localStorage.getItem('user'));
-
+let user = null;
+let likedMovies = null;
+let currentLikeId = null;
 let ctx = null;
 let currentId = null;
-export async function showDetails(context,id){
-    currentId = id;
-    ctx = context;
-    let detailsData = await api.get(detailsTarget+id);
-    let movieLikes = await api.get(`/data/likes?where=movieId%3D%22${id}%22&distinct=_ownerId&count`);
 
+export async function showDetails(context, id) {
+  currentId = id;
+  ctx = context;
+  let user = JSON.parse(localStorage.getItem('user'));
+  let detailsData = await api.get(detailsTarget + id);
+  let movieLikes = await getLikes();
+ 
+  let currLikedMovies = await api.get(`/data/likes?where=movieId%3D%22${id}%22%20and%20_ownerId%3D%22${user._id}%22`);
 
-    let detailsFragment = document.createDocumentFragment();
-    detailsFragment.appendChild(generateDetails(detailsData,movieLikes,user));
-    section.replaceChildren(detailsFragment);
-    ctx.showSection(section);
+  if(currLikedMovies.lenght > 0)
+  {
+  currentLikeId = currLikedMovies[0]._id;
+}
+  likedMovies = currLikedMovies;
+  let detailsFragment = document.createDocumentFragment();
+  detailsFragment.appendChild(generateDetails(detailsData, user, likedMovies, movieLikes));
+  section.replaceChildren(detailsFragment);
+  ctx.showSection(section);
 
 }
 
-async function onClick(e){
-    e.preventDefault();
-    let url = new URL (e.target.href)
-    if(e.target.textContent == "Like" || e.target.getAttribute("disabled")==true){
-        let result = await api.post('/data/likes',{currentId});
-        e.target.setAttribute('disabled',true);
+async function onClick(e) {
+  e.preventDefault();
+  if (e.target.textContent == "Like") {
+    let result = await api.post('/data/likes', { movieId: currentId });
+    e.target.textContent = `Liked ${await getLikes()}`;
+  }
+  else if (e.target.textContent.includes("Liked")) {
+    if(currentLikeId != null){
+      let result = await api.delete(`/data/likes/${currentLikeId}`);
     }
+    
+    e.target.textContent = "Like";
+  }
+
 }
 
 
 
 
 
-function generateDetails(data,movieLikes,user){
-     let div = document.createElement('div');
-     div.className = "container";
-    
-     let movieDiv = document.createElement('div');
-     movieDiv.className = "row bg-light text-dark";
-     div.appendChild(movieDiv);
-     movieDiv.innerHTML = `
+
+async function getLikes() {
+
+  let result = await api.get(`/data/likes?where=movieId%3D%22${currentId}%22&distinct=_ownerId&count`);
+  return result;
+
+}
+
+function isLiked(likedMovies, currentId) {
+  for (let movie of Object.values(likedMovies)) {
+    if (movie.movieId == currentId) {
+      return true;
+    }
+  }
+  return false;
+
+}
+
+function generateDetails(data, user, likedMovies, movieLikes) {
+  let div = document.createElement('div');
+  div.className = "container";
+
+
+  let movieDiv = document.createElement('div');
+  movieDiv.className = "row bg-light text-dark";
+  div.appendChild(movieDiv);
+  movieDiv.innerHTML = `
      <h1>Movie title: ${data.title}</h1>
 
      <div class="col-md-8">
@@ -60,20 +95,25 @@ function generateDetails(data,movieLikes,user){
          ${data.description}
        </p>`;
 
-       if(user._id == data._ownerId){
-        movieDiv.innerHTML += `
+  if (user._id == data._ownerId) {
+    movieDiv.innerHTML += `
               <a class="btn btn-danger" href="#">Delete</a>
               <a class="btn btn-warning" href="#">Edit</a>
               <span class="enrolled-span">Liked ${movieLikes}</span>
-              </div>`;           
-       }
-       else{
-        movieDiv.innerHTML += `
+              </div>`;
+  }
+  else if (isLiked(likedMovies, currentId)) {
+    movieDiv.innerHTML += `
+              <a class="btn btn-primary" href="#">Liked ${movieLikes}</a>
+              </div>`;
+  }
+  else {
+    movieDiv.innerHTML += `
               <a class="btn btn-primary" href="#">Like</a>
-              </div>`;          
-       }
+              </div>`;
+  }
 
-       return  div;
+  return div;
 
 
 }
