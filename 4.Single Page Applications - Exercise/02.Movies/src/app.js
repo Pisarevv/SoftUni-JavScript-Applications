@@ -1,6 +1,6 @@
 import {showHome} from './views/home.js';
 import {showAddMovie} from './views/addMovie.js';
-import { showEdit } from './views/edit.js';
+import { editMovie } from './views/edit.js';
 import { showRegister } from './views/register.js';
 import { showLogin } from './views/login.js';
 import { initialize } from './views/router.js';
@@ -13,7 +13,7 @@ let links = {
     '/register' : showRegister,
     '/addMovie' : showAddMovie,
     '/logout' : siteLogout,
-    '/edit' : showEdit
+    '/edit' : editMovie
 }
 
 let router = initialize(links);

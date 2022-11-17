@@ -1,4 +1,5 @@
 import * as api from '../api/api.js';
+import { editMovie } from './edit.js';
 const detailsTarget = '/data/movies/';
 let section = document.querySelector('#movie-example');
 section.addEventListener('click', onClick)
@@ -11,12 +12,14 @@ let likedMovies = null;
 let currentLikeId = null;
 let ctx = null;
 let currentId = null;
+let currentMovie = null;
 
 export async function showDetails(context, id) {
   currentId = id;
   ctx = context;
   let user = JSON.parse(localStorage.getItem('user'));
   let detailsData = await api.get(detailsTarget + id);
+  currentMovie = detailsData;
   let movieLikes = await getLikes();
  
   let currLikedMovies = await api.get(`/data/likes?where=movieId%3D%22${id}%22%20and%20_ownerId%3D%22${user._id}%22`);
@@ -52,7 +55,7 @@ async function onClick(e) {
   }
 
   if (e.target.textContent == "Edit") {
-    ctx.goTo('/edit');
+    editMovie(ctx,currentMovie);
   }
 
 }
