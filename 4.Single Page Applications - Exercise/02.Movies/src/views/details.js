@@ -42,9 +42,17 @@ async function onClick(e) {
   else if (e.target.textContent.includes("Liked")) {
     if(currentLikeId != null){
       let result = await api.delete(`/data/likes/${currentLikeId}`);
+      e.target.textContent = "Like";
     }
-    
-    e.target.textContent = "Like";
+  }
+
+  if (e.target.textContent == "Delete") {
+    let result = await api.delete(`/data/movies/${currentId}`);
+    ctx.goTo('/home');
+  }
+
+  if (e.target.textContent == "Edit") {
+    ctx.goTo('/edit');
   }
 
 }

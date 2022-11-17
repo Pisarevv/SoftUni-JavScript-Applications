@@ -13,6 +13,7 @@ let links = {
     '/register' : showRegister,
     '/addMovie' : showAddMovie,
     '/logout' : siteLogout,
+    '/edit' : showEdit
 }
 
 let router = initialize(links);
