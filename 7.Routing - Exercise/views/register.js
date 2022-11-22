@@ -1,11 +1,11 @@
-import { html } from '../../node_modules/lit-html/lit-html.js';
-import { login } from '../users.js';
+import {html} from '../node_modules/lit-html/lit-html.js';
+import { register } from '../users.js';
 
 
-let loginTemplate = () => html`
+let registerTemplate = () => html`
 <div class="row space-top">
     <div class="col-md-12">
-        <h1>Login User</h1>
+        <h1>Register New User</h1>
         <p>Please fill all fields.</p>
     </div>
 </div>
@@ -20,31 +20,44 @@ let loginTemplate = () => html`
                 <label class="form-control-label" for="password">Password</label>
                 <input class="form-control" id="password" type="password" name="password">
             </div>
-            <input type="submit" @click = "${onClick}" class="btn btn-primary" value="Login" />
+            <div class="form-group">
+                <label class="form-control-label" for="rePass">Repeat</label>
+                <input class="form-control" id="rePass" type="password" name="rePass">
+            </div>
+            <input type="submit" @click ="${onClick}" class="btn btn-primary" value="Register" />
         </div>
     </div>
-</form>`
+</form>`;
 
 let context = null;
 
-export function showLogin(ctx) {
+export function showRegister(ctx){
     context = ctx;
-    ctx.render(loginTemplate());
+    ctx.render(registerTemplate());
+
 }
 
 
-function onClick(e){
+async function onClick(e){
     e.preventDefault();
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
+    let rePassword = document.getElementById("rePass").value;
 
-    if(email == "" || password == ""){
+    if(email == ""){
         alert("All fields are required");
     }
-
-    else{
-        login({email,password});
-        context.page.redirect('/');
+    else if(password != rePassword){
+        alert('Passwords mismatch');
     }
+    else{
+        register({email,password});
+        context.page.redirect('/');
+
+    }
+
+
+
+    
 
 }
