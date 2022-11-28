@@ -12,7 +12,8 @@ export async function getById(id){
 }
 
 export async function deleteById(id){
-    api.delete('/data/shoes/'+ id);
+    let result = await api.delete('/data/shoes/'+ id);
+    return result;
 }
 
 export async function create(data){
@@ -23,4 +24,9 @@ export async function create(data){
 export async function updateObject(id,data){
     let result = await api.put('/data/shoes/'+id, data);
    return result;
+}
+
+export async function getByName(query){
+    let result = await api.get(`/data/shoes?where=brand%20LIKE%20%22${query}%22`);
+    return result;
 }

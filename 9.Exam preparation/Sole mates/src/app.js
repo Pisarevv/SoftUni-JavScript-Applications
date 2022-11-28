@@ -10,6 +10,7 @@ import { showEdit } from "./views/edit.js";
 import { showHome } from "./views/home.js";
 import { showLogin } from "./views/login.js";
 import { showRegister } from "./views/register.js";
+import { showSearch } from "./views/search.js";
 
 let logoutButton = document.querySelector("#logoutBtn");
 logoutButton.addEventListener('click', onLogout)
@@ -23,7 +24,8 @@ page('/register',showRegister);
 page('/catalog',showCatalog);
 page('/catalog/:id', showDetails);
 page('/create', showCreate);
-page('/edit/:id', showEdit)
+page('/edit/:id', showEdit);
+page('/search',showSearch)
 
 
 page.start();
