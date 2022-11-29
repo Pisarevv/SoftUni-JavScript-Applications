@@ -9,7 +9,6 @@ let registerTemplate = (onSubmit) => html`
             <h1>Register</h1>
         </header>
         <form @submit = ${onSubmit} id="register-form" class="main-form pad-large">
-            <div class="error">Error message.</div>
             <label>E-mail: <input type="text" name="email"></label>
             <label>Username: <input type="text" name="username"></label>
             <label>Password: <input type="password" name="password"></label>
@@ -31,6 +30,6 @@ export async function showRegister(ctx) {
 
 
 function onSubmit(ctx, data, event) {
-    console.log(data);
+    
 
 }

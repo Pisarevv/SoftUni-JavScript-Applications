@@ -46,19 +46,18 @@ async function request(url,method,data){
 }
 
 
-export async function get(url){
+async function get(url){
     return request(url,'get');
 }
-
-export async function post(url,data){
+async function post(url,data){
     return request(url,'post',data);
 }
 
-export async function del(url){
+async function del(url){
     return request(url,'del');
 }
 
-export async function put(url){
+async function put(url){
     return request(url,'put',data);
 }
 
