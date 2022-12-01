@@ -43,5 +43,5 @@ async function onRegister(ctx, data, event) {
 
 
     await register(email, password);
-    ctx.page.redirect("/catalog");
+    ctx.page.redirect("/");
 }

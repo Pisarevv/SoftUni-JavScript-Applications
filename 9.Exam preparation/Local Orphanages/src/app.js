@@ -5,8 +5,10 @@ import { setSession } from "./middleware/session.js";
 import { showCatalog } from "./views/catalog.js";
 import { showCreate } from "./views/create.js";
 import { showDetails } from "./views/details.js";
+import { showEdit } from "./views/edit.js";
 import { showLogin } from "./views/login.js";
 import { onLogout } from "./views/logout.js";
+import { showMyPosts } from "./views/myPosts.js";
 import { showRegister } from "./views/register.js";
 
 
@@ -14,12 +16,13 @@ page(setSession);
 page(updateNav);
 page(DecorateContext);
 
-page('/catalog', showCatalog);
-page('/catalog/:id', showDetails)
+page('/', showCatalog);
 page('/login', showLogin);
 page('/register', showRegister);
 page('/logout', onLogout);
 page('/create', showCreate);
-//page('/edit/:id')
+page('/edit/:id', showEdit);
+page('/myPosts', showMyPosts)
+page('/:id', showDetails);
 page.start();
 

@@ -49,5 +49,5 @@ async function onCreate(ctx,data,event){
         return;
     }
     await create(data);
-    ctx.page.redirect("/catalog");
+    ctx.page.redirect("/");
 }

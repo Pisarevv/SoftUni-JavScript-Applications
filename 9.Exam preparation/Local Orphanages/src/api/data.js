@@ -26,7 +26,7 @@ export async function updateObject(id,data){
    return result;
 }
 
-export async function getByName(userId){
+export async function getByUser(userId){
     let result = await api.get(`/data/posts?where=_ownerId%3D%22${userId}%22&sortBy=_createdOn%20desc`);
     return result;
 }

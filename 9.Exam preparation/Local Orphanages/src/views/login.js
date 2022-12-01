@@ -32,5 +32,5 @@ async function onLogin(ctx,data,event){
     }
     let {email, password} = data;
     await login(email,password);
-    ctx.page.redirect("/catalog");
+    ctx.page.redirect("/");
 }

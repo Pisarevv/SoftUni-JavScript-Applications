@@ -1,8 +1,9 @@
 import { deleteById, getById } from "../api/data.js";
+import { checkIfDonated, getDonatesCount, makeDonation } from "../api/donations.js";
 import { html, nothing } from "../lib.js";
 
 
-let detailsTemplate = (data,hasUser,isOwner,onDelete) => html`
+let detailsTemplate = (data, hasUser, isOwner, donatesCount, hasDonated, onDelete, onDonate) => html`
 <section id="details-page">
     <h1 class="title">Post Details</h1>
 
@@ -13,42 +14,69 @@ let detailsTemplate = (data,hasUser,isOwner,onDelete) => html`
             </div>
             <div class="info">
                 <h2 class="title post-title">${data.title}</h2>
-                <p class="post-description">${data.description}</p>
-                <p class="post-address">${data.address}</p>
-                <p class="post-number">${data.phone}</p>
-                <p class="donate-Item">Donate Materials: 0</p>
+                <p class="post-description">Description: ${data.description}</p>
+                <p class="post-address">Address: ${data.address}</p>
+                <p class="post-number">Phone number: ${data.phone}</p>
+                <p class="donate-Item">Donate Materials: ${donatesCount}</p>
 
-                <!--Edit and Delete are only for creator-->
-                <div class="btns">
-                   ${isOwner ? 
-                    html` <a href="/edit/${data._id}" class="edit-btn btn">Edit</a>
-                    <a href="javascript:void(0)" @click = ${onDelete} class="delete-btn btn">Delete</a>` 
-                    : nothing}
+                ${buttonsTemplate(data, isOwner, hasUser, hasDonated, onDelete, onDonate)}
 
-                    <!--Bonus - Only for logged-in users ( not authors )-->
-                    ${hasUser && !isOwner ? html`<a href="#" class="donate-btn btn">Donate</a>` : nothing}
-                </div>
 
             </div>
         </div>
     </div>
 </section>`
 
-export async function showDetails(ctx){
-    let id = ctx.params.id;
-    let data = await getById(id);
+let buttonsTemplate = (data, isOwner, hasUser, hasDonated, onDelete, onDonate) => {
+    if (isOwner) {
+        return html`<div class="btns"><a href=${`/edit/` + data._id} class="edit-btn btn">Edit</a>
+    <a href="javascript:void(0)" @click=${onDelete} class="delete-btn btn">Delete</a>
+</div>`;
+    }
+    else if (!isOwner && hasUser && hasDonated == 0) {
+        return html`<div class="btns">
+    <a @click=${onDonate} href="javascript:void(0)" class="donate-btn btn">Donate</a> </div>`;
+    }
+}
+
+
+
+
+
+export async function showDetails(ctx) {
+    let postId = ctx.params.id;
+    //let data = await ;
+    let request = [getById(postId),
+    getDonatesCount(postId)]
     let hasUser = ctx?.user;
-    let isOwner = Boolean();
-    if(data._ownerId == hasUser._id){
-        isOwner = true;
+    if (hasUser) {
+        request.push(checkIfDonated(postId, hasUser._id))
     }
 
-    ctx.render(detailsTemplate(data,hasUser,isOwner,onDelete));
+    let isOwner = Boolean();
 
-    
-    async function onDelete(){
-       await deleteById(id);
-       ctx.page.redirect("/catalog");
+    let [data, donatesCount, hasDonated] = await Promise.all(request);
+    if (hasUser) {
+        if (data._ownerId == hasUser._id) {
+            isOwner = true;
+        }
+    }
+
+
+
+    ctx.render(detailsTemplate(data, hasUser, isOwner, donatesCount, hasDonated, onDelete, onDonate));
+
+
+
+    async function onDonate() {
+        await makeDonation(postId)
+        ctx.page.redirect('/' + postId);
+
+    }
+
+    async function onDelete() {
+        let result = await deleteById(postId);
+        ctx.page.redirect("/");
     }
 
 }
