@@ -4,6 +4,7 @@ import { DecorateContext } from "./middleware/render.js";
 import { setSession } from "./middleware/session.js";
 import { showCatalog } from "./views/catalog.js";
 import { showCreate } from "./views/create.js";
+import { showDetails } from "./views/details.js";
 import { showLogin } from "./views/login.js";
 import { onLogout } from "./views/logout.js";
 import { showRegister } from "./views/register.js";
@@ -14,11 +15,11 @@ page(updateNav);
 page(DecorateContext);
 
 page('/catalog', showCatalog);
-//page('/catalog/:id', showDetails)
+page('/catalog/:id', showDetails)
 page('/login', showLogin);
 page('/register', showRegister);
 page('/logout', onLogout);
 page('/create', showCreate);
-
+//page('/edit/:id')
 page.start();
 
